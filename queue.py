@@ -44,11 +44,11 @@ class Queue:
 
     @property
     def first(self):
-        return self._first
+        return getattr(self._first, 'value', None)
 
     @property
     def last(self):
-        return self._last
+        return getattr(self._last, 'value', None)
 
     def __iter__(self):
         self._index = 0
