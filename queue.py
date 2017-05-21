@@ -27,13 +27,18 @@ class Queue:
         
         self._len += 1
 
-    def dequeue(self, default=None):
+    def dequeue(self, **kwargs):
         if self._first:
             item = self._first.value
             self._first = self._first.reference
             self._len -= 1
+            if self._len == 0:
+                self._last = None
         else:
-            item = default
+            if 'default' in kwargs:
+                item = kwargs['default']
+            else:
+                raise KeyError('dequeue from an empty queue')
 
         return item
 
@@ -54,7 +59,7 @@ class Queue:
         if self._index == self._len:
             raise StopIteration
 
-        item = self._current
+        item = self._current.value
 
         self._current = self._current.reference
         self._index += 1
@@ -62,7 +67,10 @@ class Queue:
         return item
     
     def __str__(self):
-        return '[{}]'.format(', '.join([str(item.value) for item in self]))
+        return '[{}]'.format(', '.join([str(item) for item in self]))
+
+    def __repr__(self):
+        return self.__str__()
 
 
 if __name__ == '__main__':
@@ -78,7 +86,7 @@ if __name__ == '__main__':
 
     print()
     for item in q:
-        print(item.value, end=', ')
+        print(item, end=', ')
     print('\n')
 
     for item in l:
