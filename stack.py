@@ -2,9 +2,8 @@
 from node import Node
 
 
-class Queue:
+class Stack:
     def __init__(self):
-        self._first = None
         self._last = None
 
         self._len = 0
@@ -14,36 +13,29 @@ class Queue:
     def __len__(self):
         return self._len
 
-    def enqueue(self, item):
+    def push(self, item):
         node = Node(value=item)
         
         if self._len == 0:
-            self._first = node
             self._last = node
         else:
-            self._last.reference = node
+            node.reference = self._last
             self._last = node
         
         self._len += 1
 
-    def dequeue(self, **kwargs):
-        if self._first:
-            item = self._first.value
-            self._first = self._first.reference
+    def pop(self, **kwargs):
+        if self._last:
+            item = self._last.value
+            self._last = self._last.reference
             self._len -= 1
-            if self._len == 0:
-                self._last = None
         else:
             if 'default' in kwargs:
                 item = kwargs['default']
             else:
-                raise KeyError('dequeue from an empty queue')
+                raise KeyError('pop from an empty stack')
 
         return item
-
-    @property
-    def first(self):
-        return getattr(self._first, 'value', None)
 
     @property
     def last(self):
@@ -51,7 +43,7 @@ class Queue:
 
     def __iter__(self):
         self._index = 0
-        self._current = self._first
+        self._current = self._last
         return self
 
     def __next__(self):
@@ -77,18 +69,18 @@ if __name__ == '__main__':
     samples = list(range(10))
     random.shuffle(samples)
 
-    queue = Queue()
+    stack = Stack()
     
     for item in samples:
-        queue.enqueue(item)
-        print(queue)
+        stack.push(item)
+        print(stack)
 
     print()
-    for item in queue:
+    for item in stack:
         print(item, end=', ')
     print('\n')
 
     for item in samples:
-        queue.dequeue()
-        print(queue)
+        stack.pop()
+        print(stack)
 
